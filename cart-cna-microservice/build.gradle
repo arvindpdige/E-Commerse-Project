@@ -43,7 +43,15 @@ dependencyManagement {
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-	ignoreFailures = project.hasProperty('test.ignoreFailures') ? project.getProperty('test.ignoreFailures').toBoolean() : false
+// tasks.named('test') {
+// 	useJUnitPlatform()
+// 	ignoreFailures = project.hasProperty('test.ignoreFailures') ? project.getProperty('test.ignoreFailures').toBoolean() : false
+// }
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    def ignore = project.hasProperty('test.ignoreFailures') ? project.getProperty('test.ignoreFailures').toBoolean() : false
+    println "Ignore test failures? " + ignore
+    ignoreFailures = ignore
 }
+
