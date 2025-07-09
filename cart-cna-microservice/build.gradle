@@ -45,4 +45,5 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	ignoreFailures = project.hasProperty('test.ignoreFailures') ? project.getProperty('test.ignoreFailures').toBoolean() : false
 }
