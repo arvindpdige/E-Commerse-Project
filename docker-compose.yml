@@ -1,0 +1,110 @@
+version: 
+services:
+	mongodb:
+		image: 'mongo:latest'
+		ports:
+		  - '27017:27017'
+		networks:
+		  - ecom-shop
+		environment:
+		  - MONGO_INITDB_ROOT_USERNAME: admin
+		  - MONGO_INITDB_ROOT_PASSWORD: Pass@123
+
+
+	redis:
+		image: 'redis:7-alpine'
+		ports:
+		  - '6379:6379'
+		networks:
+		  - ecom-shop
+    		logging:
+      		  <<: *logging
+
+
+	elasticsearch:
+		image: 'elasticsearch:8.2.3'
+		ports:
+		  - '9200:9300'
+		networks:
+		  - ecom-shop
+    		logging:
+      		  <<: *logging
+
+	cart-cna-microservice:
+		depends_on:
+		  - redis
+		build: ./cart-cna-microservice  
+		ports:
+		  - '8080:8080'
+		networks:
+		  - ecom-shop
+    		logging:
+      		  <<: *logging
+		environment:
+		  - SPRING_REDIS_HOST: 
+		  - SPRING_REDIS_PORT: 6379
+		  - SPRING_REDIS_PASSWORD:
+
+
+	products-cna-microservice:
+		depends_on:
+		  - mongodb
+		build: ./products-cna-microservice
+		ports:
+		  - ':'
+		networks:
+		  - ecom-shop
+    		logging:
+      		  <<: *logging
+		environment:
+		  - MONGO_INITDB_ROOT_USERNAME: admin
+		  - MONGO_INITDB_ROOT_PASSWORD: Pass@123
+		  - DATABASE: 'e-commerce'
+
+	store-ui:
+		depends_on:
+		  - cart-cna-microservice
+		  - products-cna-microservice
+		build: ./store-ui
+		ports:
+		  - '80:80'
+		networks:
+		  - ecom-shop
+    		logging:
+      		  <<: *logging
+
+
+	users-cna-microservice:
+		depends_on:
+		build: ./users-cna-microservice
+		ports:
+		  - '9090:9090'
+		networks:
+		  - ecom-shop
+    		logging:
+      		  <<: *logging
+
+
+	search-cna-microservice:
+		depends_on:
+		  - elasticsearch
+		build: ./search-cna-microservice
+		ports:
+		  - '4000:4000'
+		networks:
+		  - ecom-shop
+    		logging:
+      		  <<: *logging
+		extra_hosts:
+      		  - "host.docker.internal:${HOST_IP}"
+    		environment:
+		  - xpack.security.enabled: false
+		  - discovery.type: "single-node"
+		  - ELASTIC_URL: "http://host.docker.internal:32200"
+		  - ELASTIC_USER_NAME: admin
+		  - ELASTIC_PASSWORD: Pass@123
+		  - ELASTIC_APIKEY:
+		
+
+
+
