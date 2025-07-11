@@ -1,28 +1,27 @@
-version: "3.8"
-
+# use admin
+# db.auth("admin", "Pass*123")
 # Shared logging config
 x-logging: &logging
   driver: "json-file"
   options:
     max-size: "10m"
     max-file: "3"
-extra_hosts:
-  - "host.docker.internal:${HOST_IP}"
 
 services:
   mongodb:
     restart: unless-stopped
-    image: mongo:latest
+    image: mongo:4.2.24
     ports:
       - "27017:27017"
     networks:
       - ecom-shop
     environment: &mongo_env
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: Pass@123#
-      DATABASE: e-commerce
+      MONGO_INITDB_ROOT_PASSWORD: Pass*123
+      MONGO_INITDB_DATABASE: e-commerce
     volumes:
       - ./mongo_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     logging: *logging
 
   redis:
@@ -45,29 +44,32 @@ services:
     networks:
       - ecom-shop
     environment:
-      discovery.type: single-node
+      discovery.type: "single-node"
+      xpack.security.enabled: true
+      ELASTIC_PASSWORD: Pass*123
       # xpack.security.enabled: "false"
     logging: *logging
 
-  cart-cna-microservice:
-    restart: unless-stopped
+  cart:
+    # restart: unless-stopped
     depends_on:
       - redis
     build: ./cart-cna-microservice
     ports:
-      - "8080:8080"
+      - "8085:8085"
     networks:
       - ecom-shop
     logging: *logging
     environment:
-      SPRING_REDIS_HOST: "host.docker.internal"
+      SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      SPRING_REDIS_PASSWORD: Pass*123
 
-  products-cna-microservice:
+  product:
     restart: unless-stopped
     depends_on:
       - mongodb
+    command: [ "sh", "-c", "echo 'Waiting for MongoDB...'; sleep 10; npm start" ]
     build: ./products-cna-microservice
     ports:
       - "8081:8081"
@@ -75,14 +77,15 @@ services:
       - ecom-shop
     logging: *logging
     environment:
-      <<: *mongo_env
+      MONGO_URI: "mongodb://admin:Pass*123@mongodb:27017/e-commerce?authSource=admin"
       DATABASE: "e-commerce"
+    
 
-  store-ui:
-    restart: unless-stopped
+  store:
+    # restart: unless-stopped
     depends_on:
-      - cart-cna-microservice
-      - products-cna-microservice
+      - cart
+      - product
     build: ./store-ui
     ports:
       - "80:80"
@@ -90,8 +93,8 @@ services:
       - ecom-shop
     logging: *logging
 
-  users-cna-microservice:
-    restart: unless-stopped
+  users:
+    # restart: unless-stopped
     build: ./users-cna-microservice
     ports:
       - "9090:9090"
@@ -99,8 +102,8 @@ services:
       - ecom-shop
     logging: *logging
 
-  search-cna-microservice:
-    restart: unless-stopped
+  search:
+    # restart: unless-stopped
     depends_on:
       - elasticsearch
     build: ./search-cna-microservice
@@ -111,9 +114,9 @@ services:
     logging: *logging
     environment:
       discovery.type: "single-node"
-      ELASTIC_URL: "http://host.docker.internal:32200"
-      ELASTIC_USER_NAME: ""
-      ELASTIC_PASSWORD: ""
+      ELASTIC_URL: "http://elasticsearch:9200"
+      ELASTIC_USER_NAME: "elastic"
+      ELASTIC_PASSWORD: "Pass*123"
       ELASTIC_APIKEY: ""
 
 networks:
