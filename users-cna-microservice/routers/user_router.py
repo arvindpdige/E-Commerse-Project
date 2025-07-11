@@ -7,7 +7,6 @@ from dependencies import get_user_dal  # you must have this in your app
 
 router = APIRouter()
 
-
 # ✅ Response schema
 class UserOut(BaseModel):
     id: int
