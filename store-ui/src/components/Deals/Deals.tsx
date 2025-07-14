@@ -16,67 +16,75 @@ import { useNavigate } from "react-router-dom";
 const Deals = () => {
     const navigate = useNavigate();
 
-    const [deals, setDeals] = useState([])
-    const [error, setError] = useState(null)
+    const [deals, setDeals] = useState<any[]>([]);
+    const [error, setError] = useState<any>(null);
 
     const loadDeals = async () => {
         try {
-            const response = await axiosClient.get(productsUrl + 'deals')
-            setDeals(response.data)
-            setError(null)
-        } catch (err: any) {
-            setError(err)
-        }
-    }
+            const apiUrl = productsUrl + 'deals';
+            console.log("Deals API URL:", apiUrl);
 
-    // run on load
+            const response = await axiosClient.get(apiUrl);
+
+            if (!Array.isArray(response.data)) {
+                throw new Error('Unexpected API response format');
+            }
+
+            setDeals(response.data);
+            setError(null);
+        } catch (err: any) {
+            console.error("Error loading deals:", err);
+            setError(err);
+        }
+    };
+
     useEffect(() => {
-        loadDeals()
-    }, [])
+        loadDeals();
+    }, []);
 
     return (
         <Paper elevation={3} sx={{ pl: 2, pb: 2 }}>
             <Typography variant="h6" sx={{ p: 1, color: 'text.primary' }}>Deals of the Day</Typography>
-            <Grid container spacing={2} >
+            <Grid container spacing={2}>
                 <>
-                    {
-                        deals.slice(0, 5).map((deal: any) => (
-                            <Grid item key={deal.dealId}>
-                                <Link component="button"
-                                    onClick={() => {
-                                        navigate('product/' + deal.variantSku)}
-                                        } underline="none">
-                                    <Card sx={{ width: 250, height: 290 }}>
-                                        <Box><img src={deal.thumbnail} height="150" alt={deal.name}></img></Box>
-                                        <CardContent sx={{ height: 50 }}>
-                                            <Grid container >
-                                                <Grid item xs={12}>
-                                                    <Typography color="text.secondary">
-                                                        {deal.shortDescription}
-                                                    </Typography>
-                                                </Grid>
+                    {deals.slice(0, 5).map((deal: any) => (
+                        <Grid item key={deal.dealId}>
+                            <Link
+                                component="button"
+                                onClick={() => navigate('product/' + deal.variantSku)}
+                                underline="none"
+                            >
+                                <Card sx={{ width: 250, height: 290 }}>
+                                    <Box>
+                                        <img src={deal.thumbnail} height="150" alt={deal.shortDescription || "Deal Image"} />
+                                    </Box>
+                                    <CardContent sx={{ height: 50 }}>
+                                        <Grid container>
+                                            <Grid item xs={12}>
+                                                <Typography color="text.secondary">
+                                                    {deal.shortDescription}
+                                                </Typography>
                                             </Grid>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Grid container>
-                                                <Grid item xs={6} sx={{ p: 1, display: 'flex', justifyContent: 'flex-start' }}>
-                                                    <Typography variant="h6">$ {deal.price}</Typography></Grid>
-                                                <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                                    <Chip icon={<StarIcon />} label={deal.rating} />
-                                                </Grid>
+                                        </Grid>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Grid container>
+                                            <Grid item xs={6} sx={{ p: 1, display: 'flex', justifyContent: 'flex-start' }}>
+                                                <Typography variant="h6">$ {deal.price}</Typography>
                                             </Grid>
-                                        </CardActions>
-                                    </Card>
-                                </Link>
-
-                            </Grid>
-
-                        ))
-                    }
+                                            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                                <Chip icon={<StarIcon />} label={deal.rating} />
+                                            </Grid>
+                                        </Grid>
+                                    </CardActions>
+                                </Card>
+                            </Link>
+                        </Grid>
+                    ))}
                 </>
             </Grid>
         </Paper>
-    )
-}
+    );
+};
 
-export default Deals
+export default Deals;
