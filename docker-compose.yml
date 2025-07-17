@@ -54,7 +54,7 @@ services:
     # restart: unless-stopped
     depends_on:
       - redis
-    build: ./cart-cna-microservice
+    image: arvindpdige/cart:${TAG}
     ports:
       - "8085:8085"
     networks:
@@ -70,7 +70,7 @@ services:
     depends_on:
       - mongodb
     command: [ "sh", "-c", "echo 'Waiting for MongoDB...'; sleep 10; npm start" ]
-    build: ./products-cna-microservice
+    image: arvindpdige/products:${TAG}
     ports:
       - "8081:8081"
     networks:
@@ -86,7 +86,7 @@ services:
     depends_on:
       - cart
       - product
-    build: ./store-ui
+    image: arvindpdige/store:${TAG} 
     ports:
       - "80:80"
     networks:
@@ -95,7 +95,7 @@ services:
 
   users:
     # restart: unless-stopped
-    build: ./users-cna-microservice
+    image: arvindpdige/users:${TAG}
     ports:
       - "9090:9090"
     networks:
@@ -106,7 +106,7 @@ services:
     # restart: unless-stopped
     depends_on:
       - elasticsearch
-    build: ./search-cna-microservice
+    image: arvindpdige/search:${TAG}
     ports:
       - "4000:4000"
     networks:
