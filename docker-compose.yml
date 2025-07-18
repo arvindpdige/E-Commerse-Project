@@ -45,7 +45,7 @@ services:
       - ecom-shop
     environment:
       discovery.type: "single-node"
-      xpack.security.enabled: true
+      xpack.security.enabled: "true"
       ELASTIC_PASSWORD: Pass*123
       # xpack.security.enabled: "false"
     logging: *logging

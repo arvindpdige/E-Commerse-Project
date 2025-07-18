@@ -122,7 +122,7 @@ pipeline {
                     if (params.BRANCH_NAME == 'dev') { 
                         sh '''
                             echo "Deploying to Development Environment"
-                            docker network create ecom-shop --driver bridge
+                            # docker network create ecom-shop --driver bridge
                             TAG=${TAG} docker-compose up -d 
                         '''
                     }
@@ -132,7 +132,7 @@ pipeline {
                     //         docker network create ecom-shop --driver bridge
                     //         TAG=${TAG} docker-compose -f docker-compose.prod.yml up -d 
                     //     '''
-                    } else {
+                    else {
                         error "Invalid branch name: ${params.BRANCH_NAME}"
                     }
                 }
