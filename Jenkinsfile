@@ -48,7 +48,7 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/cart:"${TAG}" .
-                            trivy image --format json -o image.json arvindpdige/cart:"${TAG}"                            
+                            trivy image --format json -o image_vul.json arvindpdige/cart:"${TAG}"                            
                             docker push arvindpdige/cart:"${TAG}"
                         '''
                         }
@@ -63,7 +63,7 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/products:"${TAG}" .
-                            trivy image --format json -o image.json arvindpdige/products:"${TAG}" 
+                            trivy image --format json -o image_vul.json arvindpdige/products:"${TAG}" 
                             docker push arvindpdige/products:"${TAG}"
                         '''
                         }
@@ -78,7 +78,7 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/store:"${TAG}" .
-                            trivy image --format json -o image.json arvindpdige/store:"${TAG}" 
+                            trivy image --format json -o image_vul.json arvindpdige/store:"${TAG}" 
                             docker push arvindpdige/store:"${TAG}"
                         '''
                         }
@@ -93,7 +93,7 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/users:"${TAG}" .
-                            trivy image --format json -o image.json arvindpdige/users:"${TAG}" 
+                            trivy image --format json -o image_vul.json arvindpdige/users:"${TAG}" 
                             docker push arvindpdige/users:"${TAG}"
                         '''
                         }
@@ -108,7 +108,7 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/search:"${TAG}" .
-                            trivy image --format json -o image.json arvindpdige/search:"${TAG}" 
+                            trivy image --format json -o image_vul.json arvindpdige/search:"${TAG}" 
                             docker push arvindpdige/search:"${TAG}"
                         '''
                         }
@@ -126,12 +126,12 @@ pipeline {
                             TAG=${TAG} docker-compose up -d 
                         '''
                     }
-                    else if (params.BRANCH_NAME == 'main') {
-                        sh '''
-                            echo "Deploying to Production Environment"
-                            docker network create ecom-shop --driver bridge
-                            TAG=${TAG} docker-compose -f docker-compose.prod.yml up -d 
-                        '''
+                    // else if (params.BRANCH_NAME == 'main') {
+                    //     sh '''
+                    //         echo "Deploying to Production Environment"
+                    //         docker network create ecom-shop --driver bridge
+                    //         TAG=${TAG} docker-compose -f docker-compose.prod.yml up -d 
+                    //     '''
                     } else {
                         error "Invalid branch name: ${params.BRANCH_NAME}"
                     }
@@ -142,7 +142,7 @@ pipeline {
 	// post {
         // success {
         //     echo "success email sending disabled"
-        //     //emailext to: "${CFF_EMAIL_RECIPIENT}", subject: "${CFF_EMAIL_SUBJECT_SUCCESS}", body: "${CFF_EMAIL_BODY_SUCCESS}"
+        //     //emailext to: "${EMAIL_RECIPIENT}", subject: "${EMAIL_SUBJECT_SUCCESS}", body: "${EMAIL_BODY_SUCCESS}"
         // }
         // failure {
         //     // emailext to: "${EMAIL_RECIPIENT}", subject: "${EMAIL_SUBJECT_FAILURE}", body: "${EMAIL_BODY_FAILURE}"
