@@ -11,12 +11,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/",
+					"raw": "http://localhost:8085/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8085",
 					"path": [
 						""
 					]
@@ -30,12 +30,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/cart",
+					"raw": "http://localhost:8085/cart",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8085",
 					"path": [
 						"cart"
 					]
@@ -58,12 +58,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/cart",
+					"raw": "http://localhost:8085/cart",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8085",
 					"path": [
 						"cart"
 					]
@@ -86,12 +86,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/cart",
+					"raw": "http://localhost:8085/cart",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8085",
 					"path": [
 						"cart"
 					]

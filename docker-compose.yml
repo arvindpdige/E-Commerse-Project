@@ -54,7 +54,7 @@ services:
     # restart: unless-stopped
     depends_on:
       - redis
-    image: arvindpdige/cart:${TAG}
+    image: arvindpdige/cart:v1
     ports:
       - "8085:8085"
     networks:
@@ -69,10 +69,13 @@ services:
     restart: unless-stopped
     depends_on:
       - mongodb
+      - cart
+      - users
+      - search
     command: [ "sh", "-c", "echo 'Waiting for MongoDB...'; sleep 10; npm start" ]
-    image: arvindpdige/products:${TAG}
+    image: arvindpdige/products:v1
     ports:
-      - "8081:8081"
+      - "5001:5001"
     networks:
       - ecom-shop
     logging: *logging
@@ -86,7 +89,7 @@ services:
     depends_on:
       - cart
       - product
-    image: arvindpdige/store:${TAG} 
+    image: arvindpdige/store:v1
     ports:
       - "80:80"
     networks:
@@ -95,7 +98,7 @@ services:
 
   users:
     # restart: unless-stopped
-    image: arvindpdige/users:${TAG}
+    image: arvindpdige/users:v1
     ports:
       - "9090:9090"
     networks:
@@ -106,7 +109,7 @@ services:
     # restart: unless-stopped
     depends_on:
       - elasticsearch
-    image: arvindpdige/search:${TAG}
+    image: arvindpdige/search:v1
     ports:
       - "4000:4000"
     networks:
