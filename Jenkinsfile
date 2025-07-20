@@ -126,12 +126,11 @@ pipeline {
                             TAG=${TAG} docker-compose up -d 
                         '''
                     }
-                    // else if (params.BRANCH_NAME == 'main') {
-                    //     sh '''
-                    //         echo "Deploying to Production Environment"
-                    //         docker network create ecom-shop --driver bridge
-                    //         TAG=${TAG} docker-compose -f docker-compose.prod.yml up -d 
-                    //     '''
+                    else if (params.BRANCH_NAME == 'main') {
+                        sh '''
+                            echo "Deploying to Production Environment"
+                            
+                        '''
                     else {
                         error "Invalid branch name: ${params.BRANCH_NAME}"
                     }
