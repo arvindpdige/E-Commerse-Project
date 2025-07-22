@@ -16,8 +16,8 @@ services:
     networks:
       - ecom-shop
     environment: &mongo_env
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: Pass*123
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: e-commerce
     volumes:
       - ./mongo_data:/data/db
@@ -46,7 +46,7 @@ services:
     environment:
       discovery.type: "single-node"
       xpack.security.enabled: "true"
-      ELASTIC_PASSWORD: Pass*123
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       # xpack.security.enabled: "false"
     logging: *logging
 
@@ -63,7 +63,7 @@ services:
     environment:
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: Pass*123
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD}
 
   product:
     restart: unless-stopped
@@ -119,7 +119,7 @@ services:
       discovery.type: "single-node"
       ELASTIC_URL: "http://elasticsearch:9200"
       ELASTIC_USER_NAME: "elastic"
-      ELASTIC_PASSWORD: "Pass*123"
+      ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
       ELASTIC_APIKEY: ""
 
 networks:
