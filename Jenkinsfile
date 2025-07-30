@@ -64,10 +64,11 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/cart:"${TAG}" .
-                            trivy image --format json -o image_vul.json arvindpdige/cart:"${TAG}"                            
+                            trivy image --format json -o cart_vul.json arvindpdige/cart:"${TAG}"                            
                             docker push arvindpdige/cart:"${TAG}"
                         '''
                         }
+                        archiveArtifacts artifacts: 'cart_vul.json', fingerprint: true
                     }
                 }
             }   
@@ -79,10 +80,11 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/products:"${TAG}" .
-                            trivy image --format json -o image_vul.json arvindpdige/products:"${TAG}" 
+                            trivy image --format json -o products_vul.json arvindpdige/products:"${TAG}" 
                             docker push arvindpdige/products:"${TAG}"
                         '''
                         }
+                        archiveArtifacts artifacts: 'products_vul.json', fingerprint: true
                     }
                 }   
             }
@@ -94,10 +96,11 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/store:"${TAG}" .
-                            trivy image --format json -o image_vul.json arvindpdige/store:"${TAG}" 
+                            trivy image --format json -o store_vul.json arvindpdige/store:"${TAG}" 
                             docker push arvindpdige/store:"${TAG}"
                         '''
                         }
+                        archiveArtifacts artifacts: 'store_vul.json', fingerprint: true
                     }
                 }   
             }
@@ -109,10 +112,11 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/users:"${TAG}" .
-                            trivy image --format json -o image_vul.json arvindpdige/users:"${TAG}" 
+                            trivy image --format json -o users_vul.json arvindpdige/users:"${TAG}" 
                             docker push arvindpdige/users:"${TAG}"
                         '''
                         }
+                        archiveArtifacts artifacts: 'users_vul.json', fingerprint: true
                     }
                 }   
             }
@@ -124,10 +128,11 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
                             docker build -t arvindpdige/search:"${TAG}" .
-                            trivy image --format json -o image_vul.json arvindpdige/search:"${TAG}" 
+                            trivy image --format json -o search_vul.json arvindpdige/search:"${TAG}" 
                             docker push arvindpdige/search:"${TAG}"
                         '''
                         }
+                        archiveArtifacts artifacts: 'search_vul.json', fingerprint: true
                     }
                 }   
             }
