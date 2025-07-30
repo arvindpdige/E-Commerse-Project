@@ -69,6 +69,27 @@ sudo apt-get update
 sudo apt-get install trivy 
 trivy -v 
 
+#### SonarQube Setup
+docker run -d --name sonarqube \
+    -p 9000:9000 \
+    -v sonarqube_data:/opt/sonarqube/data \
+    -v sonarqube_extensions:/opt/sonarqube/extensions \
+    -v sonarqube_logs:/opt/sonarqube/logs \
+    sonarqube:lts-community
+
+# To connect to SonarQube use http://VM_Public_IP:9000
+admin:admin
+
+#### Nexus SETUP
+docker run -d –name nexus -p 8081:8081 -v nexus-data:/nexus-data sonatype/nexus:3
+
+# To connect to Nexus use http://VM_Public_IP:8081
+admin:Password_from_below_step
+
+# To avail login password
+docker exec -it nexus /bin/bash
+cat sonatype-work/nexus3/admin.password 
+
 #### TERRAFORM 
 Setup AKS Cluster using Terraform 
 

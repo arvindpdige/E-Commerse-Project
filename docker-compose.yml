@@ -75,7 +75,7 @@ services:
     command: [ "sh", "-c", "echo 'Waiting for MongoDB...'; sleep 10; npm start" ]
     image: arvindpdige/products:${TAG}
     ports:
-      - "5001:5001"
+      - "5000:5000"
     networks:
       - ecom-shop
     logging: *logging

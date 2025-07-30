@@ -20,6 +20,7 @@ pipeline {
     disableConcurrentBuilds()
     }
 	environment {
+	    SCANNER_HOME= tool 'sonar-scanner'
 		BRANCH_URL = 'https://github.com/arvindpdige/E-Commerse-Project.git'
         REGISTRY_URL = 'https://hub.docker.com/repositories/arvindpdige'
 	}
@@ -36,14 +37,29 @@ pipeline {
 				}
             }
         }
+        stage('Sonar-Analysis'){
+	        steps{
+	            withSonarQubeEnv(credentialsId: 'Sq_Token', installationName: 'SonarQube') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=e-commerce -Dsonar.projectKey=e-commerce-key \
+                        -Dsonar.java.binaries=. '''
+                }
+	        }
+	    }
+	    stage('Sonar-QG'){
+	        steps{
+	            script {
+	                waitForQualityGate abortPipeline: false, credentialsId: 'Sq_Token'
+	           }
+            }
+	   }
         stage('Cart_Build') {
             steps {
                 dir('cart-cna-microservice') {
-                    sh '''
-                        gradle wrapper --gradle-version 8.10.2
-                        gradle clean
-                        gradle build -x test
-                    '''
+                    // sh '''
+                    //     gradle wrapper --gradle-version 8.10.2
+                    //     gradle clean
+                    //     gradle build -x test
+                    // '''
                     script{
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
@@ -126,11 +142,12 @@ pipeline {
                             TAG=${TAG} docker-compose up -d 
                         '''
                     }
-                    else if (params.BRANCH_NAME == 'main') {
-                        sh '''
-                            echo "Deploying to Production Environment"
-                            
-                        '''
+                    // else if (params.BRANCH_NAME == 'main') {
+                    //     sh '''
+                    //         echo "Deploying to Production Environment"
+                    //         docker network create ecom-shop --driver bridge
+                    //         TAG=${TAG} docker-compose -f docker-compose.prod.yml up -d 
+                    //     '''
                     else {
                         error "Invalid branch name: ${params.BRANCH_NAME}"
                     }
