@@ -1,10 +1,16 @@
-FROM gradle:jdk17 as builder
+# Build stage
+FROM gradle:jdk17 AS builder
+WORKDIR /app
 COPY . .
 RUN gradle build -x test --no-daemon
 
+# Run stage
 FROM openjdk:17-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
-ARG JAR_FILE=build/libs/cart-1.0.0.jar
-COPY --from=builder ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","app.jar"]
+WORKDIR /app
+
+# Automatically copy the built JAR without hardcoding name
+COPY --from=builder /app/build/libs/*.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
