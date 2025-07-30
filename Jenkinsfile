@@ -5,133 +5,133 @@ pipeline {
 		git 'Default'
 		maven 'maven3.9.1'			
 		jdk 'jdk17'
-        	nodejs 'nodejs18'
-        	gradle 'gradle8'
+        nodejs 'nodejs18'
+        gradle 'gradle8'
 	}
 	parameters {
 		choice(name: 'BRANCH_NAME', choices:['dev', 'main'] )
 		string(name: 'TAG', defaultValue: '')
 	}
 	options {
-    	buildDiscarder( logRotator( daysToKeepStr           : "30",
+    buildDiscarder( logRotator( daysToKeepStr           : "30",
                                 numToKeepStr            : "5",
                                 artifactDaysToKeepStr   : "10",
                                 artifactNumToKeepStr    : "30") )
-    	disableConcurrentBuilds()
-    	}
+    disableConcurrentBuilds()
+    }
 	environment {
-	    	SCANNER_HOME= tool 'sonar-scanner'
+	    SCANNER_HOME= tool 'sonar-scanner'
 		BRANCH_URL = 'https://github.com/arvindpdige/E-Commerse-Project.git'
-        	REGISTRY_URL = 'https://hub.docker.com/repositories/arvindpdige'
+        REGISTRY_URL = 'https://hub.docker.com/repositories/arvindpdige'
 	}
-    	stages {
-        	stage('Clean Workspace') {
-            	steps {
-                	cleanWs()
-                	}
-            	}			
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+                }
+            }			
 		stage('Git Checkout') {			
 			steps {
 				script {
 				git branch: "${params.BRANCH_NAME}", credentialsId: 'git-token', url: "${BRANCH_URL}"
 				}
-            		}
-        	}
-        	stage('Sonar-Analysis') {
-	        	steps{
-	            		withSonarQubeEnv(credentialsId: 'Sq_Token', installationName: 'SonarQube') {
-                    			sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=e-commerce -Dsonar.projectKey=e-commerce-key \
-                        		-Dsonar.java.binaries=. '''
-                		}
-	        	}
-	   	 }
-	    	stage('Sonar-QG'){
-	        	steps{
-	            		script {
-	                		waitForQualityGate abortPipeline: false, credentialsId: 'Sq_Token'
-	           		}
-            		}
-	   	}
-        	stage('Cart_Build') {
-            		steps {
-                		dir('cart-cna-microservice') {
-		                    // sh '''
-		                    //     gradle wrapper --gradle-version 8.10.2
-		                    //     gradle clean
-		                    //     gradle build -x test
-		                    // '''
-                    			script{
-			                    withDockerRegistry(credentialsId: 'dockerhub') {
-			                        sh '''
-			                            docker build -t arvindpdige/cart:"${TAG}" .
-			                            trivy image --format json -o image_vul.json arvindpdige/cart:"${TAG}"                            
-			                            docker push arvindpdige/cart:"${TAG}"
-			                        '''
-                        			}
-                    			}
-                		}
-            		}   
-        	}
-	        stage('Products_Build') {
-	            steps {
-	                dir('products-cna-microservice') {
-	                    script{
-		                    withDockerRegistry(credentialsId: 'dockerhub') {
-		                        sh '''
-		                            docker build -t arvindpdige/products:"${TAG}" .
-		                            trivy image --format json -o image_vul.json arvindpdige/products:"${TAG}" 
-		                            docker push arvindpdige/products:"${TAG}"
-		                        '''
-	                        	}
-	                    	}
-	                	}   
-	            	}
+            }
+        }
+        stage('Sonar-Analysis'){
+	        steps{
+	            withSonarQubeEnv(credentialsId: 'Sq_Token', installationName: 'SonarQube') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=e-commerce -Dsonar.projectKey=e-commerce-key \
+                        -Dsonar.java.binaries=. '''
+                }
 	        }
-	        stage('Store_Build') {
-	            steps {
-	                dir('store-ui') {
-	                    script{
-	                    withDockerRegistry(credentialsId: 'dockerhub') {
-	                        sh '''
-	                            docker build -t arvindpdige/store:"${TAG}" .
-	                            trivy image --format json -o image_vul.json arvindpdige/store:"${TAG}" 
-	                            docker push arvindpdige/store:"${TAG}"
-	                        '''
-	                        }
-	                    }
-	                }   
-	            }
-	        }
-	        stage('Users_Build') {
-	            steps {
-	                dir('users-cna-microservice') {
-	                    script{
-	                    withDockerRegistry(credentialsId: 'dockerhub') {
-	                        sh '''
-	                            docker build -t arvindpdige/users:"${TAG}" .
-	                            trivy image --format json -o image_vul.json arvindpdige/users:"${TAG}" 
-	                            docker push arvindpdige/users:"${TAG}"
-	                        '''
-	                        }
-	                    }
-	                }   
-	            }
-	        }
-	        stage('Search_Build') {
-	            steps {
-	                dir('search-cna-microservice') {
-	                    script{
-	                    withDockerRegistry(credentialsId: 'dockerhub') {
-	                        sh '''
-	                            docker build -t arvindpdige/search:"${TAG}" .
-	                            trivy image --format json -o image_vul.json arvindpdige/search:"${TAG}" 
-	                            docker push arvindpdige/search:"${TAG}"
-	                        '''
-	                        }
-	                    }
-	                }   
-	            }
-	        }
+	    }
+	    stage('Sonar-QG'){
+	        steps{
+	            script {
+	                waitForQualityGate abortPipeline: false, credentialsId: 'Sq_Token'
+	           }
+            }
+	   }
+        stage('Cart_Build') {
+            steps {
+                dir('cart-cna-microservice') {
+                    // sh '''
+                    //     gradle wrapper --gradle-version 8.10.2
+                    //     gradle clean
+                    //     gradle build -x test
+                    // '''
+                    script{
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh '''
+                            docker build -t arvindpdige/cart:"${TAG}" .
+                            trivy image --format json -o image_vul.json arvindpdige/cart:"${TAG}"                            
+                            docker push arvindpdige/cart:"${TAG}"
+                        '''
+                        }
+                    }
+                }
+            }   
+        }
+        stage('Products_Build') {
+            steps {
+                dir('products-cna-microservice') {
+                    script{
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh '''
+                            docker build -t arvindpdige/products:"${TAG}" .
+                            trivy image --format json -o image_vul.json arvindpdige/products:"${TAG}" 
+                            docker push arvindpdige/products:"${TAG}"
+                        '''
+                        }
+                    }
+                }   
+            }
+        }
+        stage('Store_Build') {
+            steps {
+                dir('store-ui') {
+                    script{
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh '''
+                            docker build -t arvindpdige/store:"${TAG}" .
+                            trivy image --format json -o image_vul.json arvindpdige/store:"${TAG}" 
+                            docker push arvindpdige/store:"${TAG}"
+                        '''
+                        }
+                    }
+                }   
+            }
+        }
+        stage('Users_Build') {
+            steps {
+                dir('users-cna-microservice') {
+                    script{
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh '''
+                            docker build -t arvindpdige/users:"${TAG}" .
+                            trivy image --format json -o image_vul.json arvindpdige/users:"${TAG}" 
+                            docker push arvindpdige/users:"${TAG}"
+                        '''
+                        }
+                    }
+                }   
+            }
+        }
+        stage('Search_Build') {
+            steps {
+                dir('search-cna-microservice') {
+                    script{
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh '''
+                            docker build -t arvindpdige/search:"${TAG}" .
+                            trivy image --format json -o image_vul.json arvindpdige/search:"${TAG}" 
+                            docker push arvindpdige/search:"${TAG}"
+                        '''
+                        }
+                    }
+                }   
+            }
+        }
 		stage('Deploy_Environment') {			
 			steps {
 				script {
