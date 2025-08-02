@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis 
+  namespace: ecom-shop
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      replicas: 2
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        command: [ "redis-server", "--requirepass", "${redis_password}" ]
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "500m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: redis_password
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: password
+        
+
+
+
