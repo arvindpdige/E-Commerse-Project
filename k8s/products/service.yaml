@@ -1,14 +1,14 @@
 apiVersion: v1 
 kind: Service
 metadata:
-  name: cart-service
+  name: products-service
   namespace: ecom-shop
 spec:
   selector:
-    app: cart
+    app: products
   ports:
   - protocol: TCP
-    port: 8085
-    targetPort: 8085
+    port: 5000
+    targetPort: 5000
   type: ClusterIP
   sessionAffinity: None

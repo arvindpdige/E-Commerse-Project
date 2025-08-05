@@ -4,6 +4,7 @@ metadata:
   name: mongodb 
   namespace: ecom-shop
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mongodb
@@ -12,7 +13,6 @@ spec:
       labels:
         app: mongodb
     spec:
-      replicas: 2
       containers:
       - name: mongodb
         image: mongo:4.2.24 
@@ -20,27 +20,27 @@ spec:
         - containerPort: 27017
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "64Mi"
+            cpu: "100m"
           limits:
             memory: "128Mi"
-            cpu: "500m"
-      env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: username
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: password
-        - name: MONGO_INITDB_DATABASE
-          valueFrom:
-            configMapKeyRef:
-              name: mongodb-config
-              key: MONGO_INITDB_DATABASE 
+            cpu: "100m"
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: password
+          - name: MONGO_INITDB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: mongodb-config
+                key: MONGO_INITDB_DATABASE 
 
 
 

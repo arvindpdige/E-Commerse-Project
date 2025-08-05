@@ -4,6 +4,7 @@ metadata:
   name: redis 
   namespace: ecom-shop
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: redis
@@ -12,25 +13,24 @@ spec:
       labels:
         app: redis
     spec:
-      replicas: 2
       containers:
       - name: redis
         image: redis:7-alpine
         ports:
         - containerPort: 6379
-        command: [ "redis-server", "--requirepass", "${redis_password}" ]
+        command: [  "sh", "-c", "exec redis-server --requirepass \"$REDIS_PASSWORD\"" ]
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "64Mi"
+            cpu: "100m"
           limits:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "200m"
         env:
         - name: redis_password
           valueFrom:
             secretKeyRef:
-              name: redis-secret
+              name: cart-secret
               key: password
         
 

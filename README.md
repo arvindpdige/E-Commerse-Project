@@ -90,6 +90,48 @@ admin:Password_from_below_step
 docker exec -it nexus /bin/bash
 cat sonatype-work/nexus3/admin.password 
 
+#### PROMETHEUS
+wget https://github.com/prometheus/prometheus/releases/download/v3.5.0/prometheus-3.5.0.linux-amd64.tar.gz
+wget https://github.com/prometheus/blackbox_exporter/releases/download/v0.27.0/blackbox_exporter-0.27.0.linux-amd64.tar.gz
+
+nohup ./blackbox_exporter > blackbox.log 2>&1 &
+nohup ./prometheus > prometheus.log 2>&1 &
+
+# Add in prometheus.yaml
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+        - http://prometheus.io    # Target to probe with http.
+        - https://prometheus.io   # Target to probe with https.
+        - http://example.com:8080 # Target to probe with http on port 8080.
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115     # IP or Hostname of instance running prometheus
+
+Restart prometheus
+
+#### Grafana
+sudo apt-get install -y adduser libfontconfig1 musl
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise_8.2.3_amd64.deb
+sudo dpkg -i grafana-enterprise_8.2.3_amd64.deb
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable grafana-server
+sudo /bin/systemctl start grafana-server
+
+# Login as admin admin
+# Import Dashboard
+Add Data Sources -> Select prometheus -> Enter URL -> Save & Test
+Google -> Search "blackbox dashboard id" -> Click 1st result -> Import the dashboard template -> Copy ID to clipboard
++ -> Import -> Enter ID -> Load 
+
+
 #### TERRAFORM 
 Setup AKS Cluster using Terraform 
 

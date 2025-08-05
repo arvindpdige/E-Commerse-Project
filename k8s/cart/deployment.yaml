@@ -4,6 +4,7 @@ metadata:
   name: cart 
   namespace: ecom-shop
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: cart
@@ -12,25 +13,32 @@ spec:
       labels:
         app: cart
     spec:
-      replicas: 2
       containers:
       - name: cart
-        image: arvindpdige/cart:${TAG}
+        image: arvindpdige/cart:v3
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8085
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "300Mi"
+            cpu: "100m"
           limits:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "500Mi"
+            cpu: "200m"
         env:
-        - name: redis_password
+        - name: SPRING_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: redis-secret
+              name: cart-secret
               key: password
+        - name: SPRING_REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: cart-config
+              key: SPRING_REDIS_HOST
+        - name: SPRING_REDIS_PORT
+          value: "6379"
         
 
 
