@@ -147,12 +147,16 @@ pipeline {
                             TAG=${TAG} docker-compose up -d 
                         '''
                     }
-                    // else if (params.BRANCH_NAME == 'main') {
-                    //     sh '''
-                    //         echo "Deploying to Production Environment"
-                    //         docker network create ecom-shop --driver bridge
-                    //         TAG=${TAG} docker-compose -f docker-compose.prod.yml up -d 
-                    //     '''
+                    else if (params.BRANCH_NAME == 'main') {
+                        dir('k8s') {
+                            withCredentials([string(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                                sh '''
+                                    echo "Deploying to K8s Production Environment"
+                                    kustomize build . | sed "s|\${TAG}|${TAG}|g" | kubectl apply -f -
+                                '''
+                            }
+                        }
+                    }
                     else {
                         error "Invalid branch name: ${params.BRANCH_NAME}"
                     }
