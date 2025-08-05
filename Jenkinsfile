@@ -152,7 +152,7 @@ pipeline {
                             withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                                 sh '''
                                     echo "Deploying to K8s Production Environment"
-                                    kustomize build . | sed "s|\${TAG}|${TAG}|g" | kubectl apply -f -
+                                    kustomize build . | sed "s|TAG|${TAG}|g" | kubectl apply -f -
                                 '''
                             }
                         }
