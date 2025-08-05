@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: cart
-        image: arvindpdige/cart:${TAG}
+        image: arvindpdige/cart:TAG
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8085

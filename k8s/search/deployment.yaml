@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: search
-        image: arvindpdige/search:${TAG}
+        image: arvindpdige/search:TAG
         command: [ "sh", "-c", "echo 'Waiting for MongoDB...'; sleep 10; npm start" ] 
         ports:
         - containerPort: 5000
