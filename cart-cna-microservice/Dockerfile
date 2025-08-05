@@ -1,5 +1,5 @@
 # Build stage
-FROM gradle:jdk17 AS builder
+FROM gradle:8-jdk17-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN gradle build -x test --no-daemon
