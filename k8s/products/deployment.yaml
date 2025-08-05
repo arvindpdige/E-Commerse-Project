@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: products
-        image: arvindpdige/products:${TAG}
+        image: arvindpdige/products:TAG
         command: [ "sh", "-c", "echo 'Waiting for MongoDB...'; sleep 10; npm start" ] 
         ports:
         - containerPort: 5000
