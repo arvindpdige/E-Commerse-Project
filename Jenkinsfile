@@ -149,7 +149,7 @@ pipeline {
                     }
                     else if (params.BRANCH_NAME == 'main') {
                         dir('k8s') {
-                            withCredentials([string(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                            withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                                 sh '''
                                     echo "Deploying to K8s Production Environment"
                                     kustomize build . | sed "s|\${TAG}|${TAG}|g" | kubectl apply -f -
