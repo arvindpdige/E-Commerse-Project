@@ -77,16 +77,16 @@ docker run -d --name sonarqube \
     -v sonarqube_logs:/opt/sonarqube/logs \
     sonarqube:lts-community
 
-# To connect to SonarQube use http://VM_Public_IP:9000
+**To connect to SonarQube use http://VM_Public_IP:9000**
 admin:admin
 
 #### Nexus SETUP
 docker run -d –name nexus -p 8081:8081 -v nexus-data:/nexus-data sonatype/nexus:3
 
-# To connect to Nexus use http://VM_Public_IP:8081
+**To connect to Nexus use http://VM_Public_IP:8081**
 admin:Password_from_below_step
 
-# To avail login password
+**To avail login password**
 docker exec -it nexus /bin/bash
 cat sonatype-work/nexus3/admin.password 
 
@@ -97,7 +97,7 @@ wget https://github.com/prometheus/blackbox_exporter/releases/download/v0.27.0/b
 nohup ./blackbox_exporter > blackbox.log 2>&1 &
 nohup ./prometheus > prometheus.log 2>&1 &
 
-# Add in prometheus.yaml
+**Add in prometheus.yaml **
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
@@ -125,8 +125,8 @@ sudo /bin/systemctl daemon-reload
 sudo /bin/systemctl enable grafana-server
 sudo /bin/systemctl start grafana-server
 
-# Login as admin admin
-# Import Dashboard
+**Login as admin admin**
+**Import Dashboard**
 Add Data Sources -> Select prometheus -> Enter URL -> Save & Test
 Google -> Search "blackbox dashboard id" -> Click 1st result -> Import the dashboard template -> Copy ID to clipboard
 + -> Import -> Enter ID -> Load 
@@ -144,7 +144,7 @@ https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#
 
 
 
-#### MONITORING
+
 
 
 #### DEMO1
