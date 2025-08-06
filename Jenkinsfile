@@ -55,11 +55,6 @@ pipeline {
         stage('Cart_Build') {
             steps {
                 dir('cart-cna-microservice') {
-                    // sh '''
-                    //     gradle wrapper --gradle-version 8.10.2
-                    //     gradle clean
-                    //     gradle build -x test
-                    // '''
                     script{
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh '''
@@ -142,6 +137,8 @@ pipeline {
 				script {
                     if (params.BRANCH_NAME == 'dev') { 
                         sh '''
+                            echo "Stopping all containers"
+                            docker-compose down -v || true
                             echo "Deploying to Development Environment"
                             # docker network create ecom-shop --driver bridge
                             TAG=${TAG} docker-compose up -d 
@@ -151,6 +148,8 @@ pipeline {
                         dir('k8s') {
                             withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                                 sh '''
+                                    echo "Stopping all containers in K8s Production Environment"
+                                    kubectl delete -k . || true
                                     echo "Deploying to K8s Production Environment"
                                     kustomize build . | sed "s|TAG|${TAG}|g" | kubectl apply -f -
                                 '''
