@@ -137,7 +137,15 @@ Setup AKS Cluster using Terraform
 
 
 #### KUBERNETES
+Download Kubectl #Check version
+curl -LO https://dl.k8s.io/release/v1.32.5/bin/linux/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/bin/local/
 
+Download kustomize
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+chmod +x kustomize
+sudo mv kustomize /usr/bin/local/
 
 **Generate token using service account in the namespace** 
 https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#:~:text=To%20create%20a%20non%2Dexpiring,with%20that%20generated%20token%20data.
