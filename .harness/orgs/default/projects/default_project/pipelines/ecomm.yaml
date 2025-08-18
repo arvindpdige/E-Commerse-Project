@@ -40,8 +40,9 @@ pipeline:
                   spec:
                     shell: Sh
                     command: |-
-                      cd cart-cna-microservice/
-                      gradle build -x test
+                      cd products-cna-microservice/
+                      npm install
+                      npm start
                   description: Build Cart
               - step:
                   type: BuildAndPushDockerRegistry
@@ -49,7 +50,7 @@ pipeline:
                   identifier: BuildAndPushDockerRegistry_1
                   spec:
                     connectorRef: dockerhubarvind
-                    repo: arvindpdige/cart
+                    repo: arvindpdige/products
                     tags:
                       - v6
                     caching: true
