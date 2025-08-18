@@ -53,4 +53,4 @@ pipeline:
                     tags:
                       - v6
                     caching: true
-                    dockerfile: /harness/cart-cna-microservice/Dockerfile
+                    dockerfile: /harness/products-cna-microservice/Dockerfile
