@@ -42,7 +42,6 @@ pipeline:
                     command: |-
                       cd products-cna-microservice/
                       npm install
-                      npm start
                   description: Build Cart
               - step:
                   type: BuildAndPushDockerRegistry
