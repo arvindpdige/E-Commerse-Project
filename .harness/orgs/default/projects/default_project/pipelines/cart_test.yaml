@@ -38,4 +38,4 @@ pipeline:
                     shell: Sh
                     command: |-
                       cd products-cna-microservice/
-                      ./gradle build -x test
+                      ./gradlew build -x test
