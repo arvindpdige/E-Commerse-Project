@@ -38,4 +38,5 @@ pipeline:
                     shell: Sh
                     command: |-
                       cd cart-cna-microservice/
+                      chmod +x gradlew
                       ./gradlew build -x test
