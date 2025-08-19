@@ -7,7 +7,7 @@
 *.ear
 
 ### Gradle ###
-.gradle
+#.gradle
 /build/
 /bin/
 
