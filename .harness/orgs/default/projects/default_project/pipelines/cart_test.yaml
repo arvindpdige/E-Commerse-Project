@@ -40,7 +40,9 @@ pipeline:
                     shell: Sh
                     command: |-
                       java --version
+                      ls -lrth
                       cd cart-cna-microservice/
+                      ls -ltrh
                       chmod +x gradlew
                       ./gradlew build -x test
                     imagePullPolicy: IfNotPresent
