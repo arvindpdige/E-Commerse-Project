@@ -37,5 +37,5 @@ pipeline:
                   spec:
                     shell: Sh
                     command: |-
-                      cd products-cna-microservice/
+                      cd cart-cna-microservice/
                       ./gradlew build -x test
