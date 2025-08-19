@@ -2,7 +2,7 @@
 FROM gradle:8-jdk17-alpine AS builder
 WORKDIR /app
 COPY . .
-RUN gradle build -x test 
+RUN gradlew build -x test 
 
 # Run stage
 FROM openjdk:17-alpine
