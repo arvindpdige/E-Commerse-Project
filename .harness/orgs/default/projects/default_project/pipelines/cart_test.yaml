@@ -54,4 +54,4 @@ pipeline:
                     tags:
                       - v6
                     caching: true
-                    dockerfile: cart-cna-microservice/
+                    dockerfile: cart-cna-microservice/Dockerfile
