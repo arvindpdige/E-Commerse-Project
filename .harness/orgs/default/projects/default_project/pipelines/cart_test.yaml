@@ -35,8 +35,12 @@ pipeline:
                   name: Run_1
                   identifier: Run_1
                   spec:
+                    connectorRef: dockerhubarvind
+                    image: eclipse-temurin:17-jdk
                     shell: Sh
                     command: |-
+                      java --version
                       cd cart-cna-microservice/
                       chmod +x gradlew
                       ./gradlew build -x test
+                    imagePullPolicy: IfNotPresent
