@@ -1,0 +1,5 @@
+service:
+  name: Ecom-microservices
+  identifier: Ecommicroservices
+  orgIdentifier: default
+  projectIdentifier: default_project
