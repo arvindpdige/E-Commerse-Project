@@ -3,3 +3,21 @@ service:
   identifier: Ecommicroservices
   orgIdentifier: default
   projectIdentifier: default_project
+  serviceDefinition:
+    spec:
+      manifests:
+        - manifest:
+            identifier: kustomize
+            type: Kustomize
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: githubarvind
+                  gitFetchType: Branch
+                  folderPath: k8s
+                  branch: main
+              pluginPath: ""
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+    type: Kubernetes
