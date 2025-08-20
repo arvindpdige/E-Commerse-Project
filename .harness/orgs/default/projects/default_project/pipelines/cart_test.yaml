@@ -51,6 +51,7 @@ pipeline:
                   name: Run_2
                   identifier: Run_2
                   spec:
+                    connectorRef: dockerhubarvind
                     shell: Sh
                     command: |-
                       sudo apt install gradle -y
