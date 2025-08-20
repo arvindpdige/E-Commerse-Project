@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 RUN ls -la /app
 RUN chmod +x gradlew
-RUN gradlew build -x test 
+RUN gradle build -x test 
 
 # Run stage
 FROM openjdk:17-alpine
