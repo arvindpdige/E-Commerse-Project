@@ -45,9 +45,6 @@ pipeline:
                       ls -ltrh
                       chmod +x gradlew
                       ./gradlew build -x test
-
-                      docker build -t arvindpdige/cart:v6
-                      docker push arvindpdige/cart:v6
                     imagePullPolicy: IfNotPresent
               - step:
                   type: Run
