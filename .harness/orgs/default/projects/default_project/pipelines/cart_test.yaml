@@ -52,6 +52,7 @@ pipeline:
                   identifier: Run_2
                   spec:
                     connectorRef: dockerhubarvind
+                    repo: arvindpdige/cart
                     shell: Sh
                     command: |-
                       sudo apt install gradle -y
