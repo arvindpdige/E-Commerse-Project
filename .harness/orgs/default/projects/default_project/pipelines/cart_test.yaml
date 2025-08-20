@@ -56,5 +56,5 @@ pipeline:
                       sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                       cd cart-cna-microservice/
                       docker --version
-                      docker build -t arvindpdige/cart:v6
+                      docker buildx build -t arvindpdige/cart:v6
                       docker push arvindpdige/cart:v6
