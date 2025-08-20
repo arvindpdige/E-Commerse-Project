@@ -20,4 +20,10 @@ service:
               pluginPath: ""
               skipResourceVersioning: false
               enableDeclarativeRollback: false
+      variables:
+        - name: TAG
+          type: String
+          description: ""
+          required: true
+          value: v1
     type: Kubernetes
