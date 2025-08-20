@@ -1,0 +1,6 @@
+environment:
+  name: minikube
+  identifier: minikube
+  orgIdentifier: default
+  projectIdentifier: default_project
+  type: PreProduction
