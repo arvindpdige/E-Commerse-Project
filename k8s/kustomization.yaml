@@ -9,4 +9,5 @@ resources:
   - store
   - search
   - service.yaml
+# for harness deployment
 patches: []
