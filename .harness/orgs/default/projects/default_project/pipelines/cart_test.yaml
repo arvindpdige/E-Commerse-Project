@@ -100,6 +100,18 @@ pipeline:
                     caching: true
                     dockerfile: /harness/search/Dockerfile
                     context: /harness/search/
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: UsersBuildAndPushDockerRegistry
+                  identifier: UsersBuildAndPushDockerRegistry
+                  spec:
+                    connectorRef: dockerhubarvind
+                    repo: arvindpdige/users
+                    tags:
+                      - <+pipeline.variables.TAG>
+                    caching: true
+                    dockerfile: /harness/users-cna-microservice/Dockerfile
+                    context: /harness/users-cna-microservice/
   variables:
     - name: TAG
       type: String
