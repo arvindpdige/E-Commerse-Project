@@ -79,7 +79,7 @@ pipeline:
               - step:
                   type: BuildAndPushDockerRegistry
                   name: StoreBuildAndPushDockerRegistry
-                  identifier: BuildAndPushDockerRegistry
+                  identifier: StoreBuildAndPushDockerRegistry
                   spec:
                     connectorRef: dockerhubarvind
                     repo: arvindpdige/store
@@ -91,7 +91,7 @@ pipeline:
               - step:
                   type: BuildAndPushDockerRegistry
                   name: SearchBuildAndPushDockerRegistry
-                  identifier: StoreBuildAndPushDockerRegistry
+                  identifier: SearchBuildAndPushDockerRegistry
                   spec:
                     connectorRef: dockerhubarvind
                     repo: arvindpdige/search
