@@ -68,7 +68,7 @@ pipeline:
               - step:
                   type: BuildAndPushDockerRegistry
                   name: ProductBuildAndPushDockerRegistry
-                  identifier: BuildAndPushDockerRegistry_1
+                  identifier: ProductBuildAndPushDockerRegistry
                   spec:
                     connectorRef: dockerhubarvind
                     repo: arvindpdige/products
@@ -79,7 +79,7 @@ pipeline:
               - step:
                   type: BuildAndPushDockerRegistry
                   name: StoreBuildAndPushDockerRegistry
-                  identifier: BuildAndPushDockerRegistry_2
+                  identifier: BuildAndPushDockerRegistry
                   spec:
                     connectorRef: dockerhubarvind
                     repo: arvindpdige/store
@@ -88,6 +88,18 @@ pipeline:
                     caching: true
                     dockerfile: /harness/store-ui/Dockerfile
                     context: /harness/store-ui/
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: SearchBuildAndPushDockerRegistry
+                  identifier: StoreBuildAndPushDockerRegistry
+                  spec:
+                    connectorRef: dockerhubarvind
+                    repo: arvindpdige/search
+                    tags:
+                      - <+pipeline.variables.TAG>
+                    caching: true
+                    dockerfile: /harness/search/Dockerfile
+                    context: /harness/search/
   variables:
     - name: TAG
       type: String
