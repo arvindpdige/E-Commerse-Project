@@ -17,6 +17,8 @@ service:
                   gitFetchType: Branch
                   folderPath: k8s
                   branch: main
+              patchesPaths:
+                - k8s/harness-patch-image.yaml
               pluginPath: ""
               skipResourceVersioning: false
               enableDeclarativeRollback: false
