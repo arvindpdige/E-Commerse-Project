@@ -1,8 +1,9 @@
 # Build stage
-FROM gradle:8-jdk17-alpine AS builder
+FROM gradle:8.14.3-jdk17 AS builder
 WORKDIR /app
 COPY . .
 RUN ls -la /app
+RUN chmod +x gradlew
 RUN gradle build -x test 
 
 # Run stage
