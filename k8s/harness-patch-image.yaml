@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cart
+  namespace: ecom-shop
 spec:
   template:
     spec:
@@ -13,6 +14,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: products
+  namespace: ecom-shop
 spec:
   template:
     spec:
@@ -24,6 +26,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: search
+  namespace: ecom-shop
 spec:
   template:
     spec:
@@ -35,6 +38,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: store
+  namespace: ecom-shop
 spec:
   template:
     spec:
@@ -46,6 +50,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: users
+  namespace: ecom-shop
 spec:
   template:
     spec:
