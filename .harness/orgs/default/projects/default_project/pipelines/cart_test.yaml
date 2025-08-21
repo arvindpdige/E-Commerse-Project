@@ -98,7 +98,7 @@ pipeline:
                     tags:
                       - <+pipeline.variables.TAG>
                     caching: true
-                    dockerfile: /harness/search/Dockerfile
+                    dockerfile: /harness/search-cna-microservice/Dockerfile
                     context: /harness/search-cna-microservice/
               - step:
                   type: BuildAndPushDockerRegistry
