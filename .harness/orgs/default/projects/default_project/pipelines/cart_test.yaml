@@ -40,7 +40,6 @@ pipeline:
                     shell: Sh
                     command: |-
                       java --version
-                      sudo apt install gradle -y
                       gradle -v
                       which gradle
                       ls -lrth
