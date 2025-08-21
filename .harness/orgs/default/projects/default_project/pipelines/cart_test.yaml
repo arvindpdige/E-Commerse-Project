@@ -87,6 +87,7 @@ pipeline:
                       - <+pipeline.variables.TAG>
                     caching: true
                     dockerfile: /harness/store-ui/Dockerfile
+                    context: /harness/store-ui/
   variables:
     - name: TAG
       type: String
