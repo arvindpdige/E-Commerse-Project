@@ -32,8 +32,8 @@ pipeline:
             steps:
               - step:
                   type: Run
-                  name: Run_2
-                  identifier: Run_2
+                  name: Run_Build_Docker_Image_Locally
+                  identifier: build_cart_local
                   spec:
                     connectorRef: dockerhubarvind
                     repo: arvindpdige/cart
@@ -46,7 +46,22 @@ pipeline:
                       cd cart-cna-microservice/
                       docker --version
                       docker build -t arvindpdige/cart:v6 .
-                      docker push arvindpdige/cart:v6
+                      docker save arvindpdige/cart:v6 -o cart.tar
+              - step:
+                  type: Run
+                  name: Run_Push_Docker_Image_Locally
+                  identifier: push_cart_image
+                  image: docker:24
+                  spec:
+                    connectorRef: dockerhubarvind
+                    repo: arvindpdige/cart
+                    shell: Sh
+                    command: |-
+                      ls -la .
+                       cd cart-cna-microservice/
+                       ls -la .
+                       docker load -i cart.tar
+                       docker push arvindpdige/cart:v6 
               - step:
                   type: BuildAndPushDockerRegistry
                   name: CartBuildAndPushDocker
