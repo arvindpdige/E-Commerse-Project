@@ -40,11 +40,13 @@ pipeline:
                     shell: Sh
                     command: |-
                       java --version
+                      sudo apt install gradle -y
+                      gradle -v
+                      which gradle
                       ls -lrth
                       cd cart-cna-microservice/
                       ls -ltrh
-                      chmod +x gradlew
-                      ./gradlew build -x test
+                      ./gradle build -x test
                     imagePullPolicy: IfNotPresent
               - step:
                   type: BuildAndPushDockerRegistry
