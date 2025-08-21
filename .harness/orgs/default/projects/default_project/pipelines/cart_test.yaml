@@ -54,14 +54,16 @@ pipeline:
                   image: docker:24
                   spec:
                     connectorRef: dockerhubarvind
-                    repo: arvindpdige/cart
+                    image: docker:24
                     shell: Sh
                     command: |-
                       ls -la .
                        cd cart-cna-microservice/
                        ls -la .
                        docker load -i cart.tar
-                       docker push arvindpdige/cart:v6 
+                       docker push arvindpdige/cart:v6
+                    privileged: true
+                    imagePullPolicy: IfNotPresent
               - step:
                   type: BuildAndPushDockerRegistry
                   name: CartBuildAndPushDocker
