@@ -128,6 +128,12 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
+        variables:
+          - name: TAG
+            type: String
+            description: ""
+            required: true
+            value: v7
   variables:
     - name: TAG
       type: String
