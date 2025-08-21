@@ -61,7 +61,7 @@ pipeline:
                        cd cart-cna-microservice/
                        ls -la .
                        docker load -i cart.tar
-                       docker push arvindpdige/cart:v6
+                       #docker push arvindpdige/cart:v6
                     privileged: true
                     imagePullPolicy: IfNotPresent
               - step:
