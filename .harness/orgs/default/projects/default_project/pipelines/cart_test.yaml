@@ -48,23 +48,36 @@ pipeline:
                       docker build -t arvindpdige/cart:<+pipeline.variables.TAG> .
                       docker save arvindpdige/cart:<+pipeline.variables.TAG> -o cart.tar
                     privileged: true
-              - step:
-                  type: Run
-                  name: Run_Push_Docker_Image_Locally
-                  identifier: push_cart_image
-                  image: docker:24
-                  spec:
-                    connectorRef: dockerhubarvind
-                    image: docker:24
-                    shell: Sh
-                    command: |-
-                      ls -la .
-                       cd cart-cna-microservice/
-                       ls -la .
-                       docker load -i cart.tar
-                       #docker push arvindpdige/cart:<+pipeline.variables.TAG>
-                    privileged: true
-                    imagePullPolicy: IfNotPresent
+              - parallel:
+                  - step:
+                      type: Run
+                      name: Run_Push_Docker_Image_Locally
+                      identifier: push_cart_image
+                      image: docker:24
+                      spec:
+                        connectorRef: dockerhubarvind
+                        image: docker:24
+                        shell: Sh
+                        command: |-
+                          ls -la .
+                           cd cart-cna-microservice/
+                           ls -la .
+                           docker load -i cart.tar
+                           #docker push arvindpdige/cart:<+pipeline.variables.TAG>
+                        privileged: true
+                        imagePullPolicy: IfNotPresent
+                  - step:
+                      type: BuildAndPushDockerRegistry
+                      name: BuildAndPushDockerRegistry_5
+                      identifier: BuildAndPushDockerRegistry_5
+                      spec:
+                        connectorRef: dockerhubarvind
+                        repo: arvindpdige/cart
+                        tags:
+                          - v9
+                        caching: true
+                        dockerfile: /harness/cart-cna-microservice/Dockerfile
+                        context: /harness/cart-cna-microservice/
               - step:
                   type: BuildAndPushDockerRegistry
                   name: ProductBuildAndPushDockerRegistry
