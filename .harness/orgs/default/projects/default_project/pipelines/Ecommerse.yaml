@@ -139,4 +139,4 @@ pipeline:
       type: String
       description: ""
       required: true
-      value: v7
+      value: v8
