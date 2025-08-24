@@ -92,7 +92,7 @@ pipeline:
     - stage:
         name: approval
         identifier: approval
-        description: ""
+        description: Approve the deployment
         type: Approval
         spec:
           execution:
