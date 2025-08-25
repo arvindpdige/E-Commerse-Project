@@ -3,7 +3,7 @@ FROM gradle:8.14.3-jdk17 AS builder
 WORKDIR /app
 COPY . .
 RUN chmod +x gradlew
-RUN gradle build -x test 
+RUN gradle build 
 
 # Run stage
 FROM openjdk:17-alpine
