@@ -42,8 +42,7 @@ pipeline:
                       gradle -v
                       which gradle
                       cd cart-cna-microservice/
-                      chmod +x gradlew
-                      gradlew clean build
+                      gradle clean build
                     reports:
                       type: JUnit
                       spec:
