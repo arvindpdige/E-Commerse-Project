@@ -39,8 +39,11 @@ pipeline:
                         shell: Sh
                         command: |-
                           cd cart-cna-microservice/
-                          chmod +x gradlew
-                          ./gradlew build
+                          sudo apt install gradle -y
+                          gradle -v
+                          which gradle
+                          cd cart-cna-microservice/
+                          gradle build
                   - step:
                       type: BuildAndPushDockerRegistry
                       name: Cart_Build_And_Push
