@@ -30,31 +30,18 @@ pipeline:
             spec: {}
           execution:
             steps:
-              - parallel:
-                  - step:
-                      type: Run
-                      name: Run_1
-                      identifier: Run_1
-                      spec:
-                        shell: Sh
-                        command: |-
-                          sudo apt install gradle -y
-                          gradle -v
-                          which gradle
-                          cd cart-cna-microservice/
-                          gradle build
-                  - step:
-                      type: BuildAndPushDockerRegistry
-                      name: Cart_Build_And_Push
-                      identifier: Cart_Build_And_Push
-                      spec:
-                        connectorRef: dockerhubarvind
-                        repo: arvindpdige/cart
-                        tags:
-                          - <+pipeline.variables.TAG>
-                        caching: true
-                        dockerfile: /harness/cart-cna-microservice/Dockerfile
-                        context: /harness/cart-cna-microservice/
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: Cart_Build_And_Push
+                  identifier: Cart_Build_And_Push
+                  spec:
+                    connectorRef: dockerhubarvind
+                    repo: arvindpdige/cart
+                    tags:
+                      - <+pipeline.variables.TAG>
+                    caching: true
+                    dockerfile: /harness/cart-cna-microservice/Dockerfile
+                    context: /harness/cart-cna-microservice/
               - step:
                   type: BuildAndPushDockerRegistry
                   name: Products_Build_And_Push
