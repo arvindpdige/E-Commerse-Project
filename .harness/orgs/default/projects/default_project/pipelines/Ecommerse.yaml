@@ -36,7 +36,7 @@ pipeline:
                   identifier: Run_1
                   spec:
                     connectorRef: dockerhubarvind
-                    repo: gradle:8.14.3-jdk17
+                    image: gradle:8.14.3-jdk17
                     shell: Sh
                     command: |-
                       gradle -v
@@ -48,7 +48,7 @@ pipeline:
                       type: JUnit
                       spec:
                         paths:
-                          - build/test-results/**/*.xml
+                          - /harness/cart-cna-microservice/*.xml
               - stepGroup:
                   name: Microservices_build_and_push
                   identifier: Microservices_build_and_push
