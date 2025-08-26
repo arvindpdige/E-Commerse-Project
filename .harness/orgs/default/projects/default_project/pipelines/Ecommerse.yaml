@@ -49,7 +49,7 @@ pipeline:
                       type: JUnit
                       spec:
                         paths:
-                          - /harness/cart-cna-microservice/*.xml
+                          - cart-cna-microservice/build/test-results/**/*.xml
               - stepGroup:
                   name: Microservices_build_and_push
                   identifier: Microservices_build_and_push
