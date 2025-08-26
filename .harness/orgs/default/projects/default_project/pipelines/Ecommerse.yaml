@@ -42,7 +42,7 @@ pipeline:
                       gradle -v
                       which gradle
                       cd cart-cna-microservice/
-                      gardle clean
+                      gradle clean
                       gradle test 
                       gradle build
                     reports:
