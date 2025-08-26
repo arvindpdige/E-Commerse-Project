@@ -42,7 +42,9 @@ pipeline:
                       gradle -v
                       which gradle
                       cd cart-cna-microservice/
-                      gradle clean build
+                      gardle clean
+                      gradle test 
+                      gradle build
                     reports:
                       type: JUnit
                       spec:
