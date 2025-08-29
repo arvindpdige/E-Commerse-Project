@@ -190,3 +190,15 @@ pipeline:
       description: ""
       required: true
       value: v8
+  notificationRules:
+    - name: pipeline_execution
+      identifier: pipeline_execution
+      pipelineEvents:
+        - type: AllEvents
+      notificationMethod:
+        type: Email
+        spec:
+          userGroups: []
+          recipients:
+            - arvinddige@virtusa.com
+      enabled: true
