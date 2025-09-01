@@ -189,7 +189,7 @@ pipeline:
       type: String
       description: ""
       required: true
-      value: v8
+      value: v10
   notificationRules:
     - name: pipeline_execution
       identifier: pipeline_execution
