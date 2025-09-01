@@ -1,0 +1,14 @@
+infrastructureDefinition:
+  name: QA_Infra
+  identifier: QA_Infra
+  orgIdentifier: default
+  projectIdentifier: default_project
+  environmentRef: Qa
+  deploymentType: Kubernetes
+  type: KubernetesDirect
+  spec:
+    connectorRef: minikubek8connector
+    namespace: default
+    releaseName: release-<+INFRA_KEY_SHORT_ID>
+  allowSimultaneousDeployments: false
+  scopedServices: []
