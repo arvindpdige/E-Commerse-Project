@@ -1,0 +1,199 @@
+pipeline:
+  projectIdentifier: default_project
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: githubarvind
+        build: <+input>
+  stages:
+    - stage:
+        name: microservicesBuild
+        identifier: microservicesBuild
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          buildIntelligence:
+            enabled: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Run_1
+                  identifier: Run_1
+                  spec:
+                    connectorRef: dockerhubarvind
+                    image: gradle:8.14.3-jdk17
+                    shell: Sh
+                    command: "gradle -v\nwhich gradle\ncd cart-cna-microservice/\n\
+                      gradle clean\ngradle test \ngradle build"
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - cart-cna-microservice/build/test-results/**/*.xml
+              - stepGroup:
+                  name: Microservices_build_and_push
+                  identifier: Microservices_build_and_push
+                  steps:
+                    - step:
+                        type: BuildAndPushDockerRegistry
+                        name: Cart_Build_And_Push
+                        identifier: Cart_Build_And_Push
+                        spec:
+                          connectorRef: dockerhubarvind
+                          repo: arvindpdige/cart
+                          tags:
+                            - <+pipeline.variables.TAG>
+                          caching: true
+                          dockerfile: /harness/cart-cna-microservice/Dockerfile
+                          context: /harness/cart-cna-microservice/
+                    - step:
+                        type: BuildAndPushDockerRegistry
+                        name: Products_Build_And_Push
+                        identifier: ProductBuildAndPushDockerRegistry
+                        spec:
+                          connectorRef: dockerhubarvind
+                          repo: arvindpdige/products
+                          tags:
+                            - <+pipeline.variables.TAG>
+                          caching: true
+                          dockerfile: /harness/products-cna-microservice/Dockerfile
+                    - step:
+                        type: BuildAndPushDockerRegistry
+                        name: Store_Build_And_Push
+                        identifier: StoreBuildAndPushDockerRegistry
+                        spec:
+                          connectorRef: dockerhubarvind
+                          repo: arvindpdige/store
+                          tags:
+                            - <+pipeline.variables.TAG>
+                          caching: true
+                          dockerfile: /harness/store-ui/Dockerfile
+                          context: /harness/store-ui/
+                    - step:
+                        type: BuildAndPushDockerRegistry
+                        name: Search_Build_And_Push
+                        identifier: SearchBuildAndPushDockerRegistry
+                        spec:
+                          connectorRef: dockerhubarvind
+                          repo: arvindpdige/search
+                          tags:
+                            - <+pipeline.variables.TAG>
+                          caching: true
+                          dockerfile: /harness/search-cna-microservice/Dockerfile
+                          context: /harness/search-cna-microservice/
+                    - step:
+                        type: BuildAndPushDockerRegistry
+                        name: Users_Build_And_Push
+                        identifier: UsersBuildAndPushDockerRegistry
+                        spec:
+                          connectorRef: dockerhubarvind
+                          repo: arvindpdige/users
+                          tags:
+                            - <+pipeline.variables.TAG>
+                          caching: true
+                          dockerfile: /harness/users-cna-microservice/Dockerfile
+                          context: /harness/users-cna-microservice/
+    - stage:
+        name: approval
+        identifier: approval
+        description: Approve the deployment
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: deploy_approval
+                  identifier: deploy_approval
+                  type: HarnessApproval
+                  timeout: 1d
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - account._account_all_users
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
+    - stage:
+        name: E_Commerse_App
+        identifier: E_Commerse_App
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: Ecommicroservices
+          environment:
+            environmentRef: minikube
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: minikubeinfra
+          execution:
+            steps:
+              - step:
+                  name: Rollout Deployment
+                  identifier: rolloutDeployment
+                  type: K8sRollingDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+                    pruningEnabled: false
+            rollbackSteps:
+              - step:
+                  name: Rollback Rollout Deployment
+                  identifier: rollbackRolloutDeployment
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec:
+                    pruningEnabled: false
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+        variables:
+          - name: TAG
+            type: String
+            description: ""
+            required: true
+            value: v7
+  variables:
+    - name: TAG
+      type: String
+      description: ""
+      required: true
+      value: v10
+  notificationRules:
+    - name: pipeline_execution
+      identifier: pipeline_execution
+      pipelineEvents:
+        - type: AllEvents
+      notificationMethod:
+        type: Email
+        spec:
+          userGroups: []
+          recipients:
+            - arvinddige@virtusa.com
+      enabled: true
+  identifier: Ecommerse_Clone
+  name: Ecommerse - Clone
