@@ -36,8 +36,13 @@ pipeline:
                     connectorRef: dockerhubarvind
                     image: gradle:8.14.3-jdk17
                     shell: Sh
-                    command: "gradle -v\nwhich gradle\ncd cart-cna-microservice/\n\
-                      gradle clean\ngradle test \ngradle build"
+                    command: |-
+                      gradle -v
+                      which gradle
+                      cd cart-cna-microservice/
+                      gradle clean
+                      gradle test 
+                      gradle build
                     reports:
                       type: JUnit
                       spec:
@@ -107,16 +112,16 @@ pipeline:
                           dockerfile: /harness/users-cna-microservice/Dockerfile
                           context: /harness/users-cna-microservice/
     - stage:
-        name: approval
-        identifier: approval
-        description: Approve the deployment
+        name: Canary_Approve
+        identifier: Canary_Approve
+        description: ""
         type: Approval
         spec:
           execution:
             steps:
               - step:
-                  name: deploy_approval
-                  identifier: deploy_approval
+                  name: approval
+                  identifier: approval
                   type: HarnessApproval
                   timeout: 1d
                   spec:
@@ -129,12 +134,14 @@ pipeline:
                       disallowPipelineExecutor: false
                       userGroups:
                         - account._account_all_users
+                        - _project_all_users
+                        - org._organization_all_users
                     isAutoRejectEnabled: false
                     approverInputs: []
         tags: {}
     - stage:
-        name: E_Commerse_App
-        identifier: E_Commerse_App
+        name: Canary
+        identifier: Canary
         description: ""
         type: Deployment
         spec:
@@ -148,22 +155,64 @@ pipeline:
               - identifier: minikubeinfra
           execution:
             steps:
-              - step:
-                  name: Rollout Deployment
-                  identifier: rolloutDeployment
-                  type: K8sRollingDeploy
-                  timeout: 10m
-                  spec:
-                    skipDryRun: false
-                    pruningEnabled: false
+              - stepGroup:
+                  name: Canary Deployment
+                  identifier: canaryDeployment
+                  steps:
+                    - step:
+                        name: Canary Deployment
+                        identifier: canaryDeployment
+                        type: K8sCanaryDeploy
+                        timeout: 10m
+                        spec:
+                          instanceSelection:
+                            type: Count
+                            spec:
+                              count: 1
+                          skipDryRun: false
+                          trafficRouting:
+                            spec:
+                              routes:
+                                - route:
+                                    type: http
+                                    name: route1
+                                    destinations:
+                                      - destination:
+                                          host: stable
+                                      - destination:
+                                          host: canary
+                              name: virtual-service-<+service.name>
+                            provider: istio
+                    - step:
+                        name: Canary Delete
+                        identifier: canaryDelete
+                        type: K8sCanaryDelete
+                        timeout: 10m
+                        spec: {}
+              - stepGroup:
+                  name: Primary Deployment
+                  identifier: primaryDeployment
+                  steps:
+                    - step:
+                        name: Rolling Deployment
+                        identifier: rollingDeployment
+                        type: K8sRollingDeploy
+                        timeout: 10m
+                        spec:
+                          skipDryRun: false
             rollbackSteps:
               - step:
-                  name: Rollback Rollout Deployment
-                  identifier: rollbackRolloutDeployment
+                  name: Canary Delete
+                  identifier: rollbackCanaryDelete
+                  type: K8sCanaryDelete
+                  timeout: 10m
+                  spec: {}
+              - step:
+                  name: Rolling Rollback
+                  identifier: rollingRollback
                   type: K8sRollingRollback
                   timeout: 10m
-                  spec:
-                    pruningEnabled: false
+                  spec: {}
         tags: {}
         failureStrategies:
           - onFailure:
@@ -171,12 +220,6 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
-        variables:
-          - name: TAG
-            type: String
-            description: ""
-            required: true
-            value: v7
   variables:
     - name: TAG
       type: String
