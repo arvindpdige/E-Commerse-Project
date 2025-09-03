@@ -230,7 +230,7 @@ pipeline:
     - name: pipeline_execution
       identifier: pipeline_execution
       pipelineEvents:
-        - type: AllEvents
+        - type: PipelineFailed
       notificationMethod:
         type: Email
         spec:
