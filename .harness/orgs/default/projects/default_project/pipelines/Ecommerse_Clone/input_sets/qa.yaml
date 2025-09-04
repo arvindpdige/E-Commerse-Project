@@ -1,0 +1,14 @@
+inputSet:
+  name: qa
+  identifier: qa
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Ecommerse_Clone
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+input>
