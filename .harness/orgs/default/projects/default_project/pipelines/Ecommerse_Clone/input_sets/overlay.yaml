@@ -1,0 +1,9 @@
+overlayInputSet:
+  name: overlay
+  identifier: overlay
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipelineIdentifier: Ecommerse_Clone
+  inputSetReferences:
+    - qa
+  tags: {}
