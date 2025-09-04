@@ -1,0 +1,11 @@
+inputSet:
+  name: dev
+  identifier: dev
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Ecommerse_Clone
+    properties:
+      ci:
+        codebase:
+          build: <+input>
